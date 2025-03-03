@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
+from logs.constant import Constant
 
 
 class LogPreprocessor:
@@ -89,6 +90,16 @@ class LogPreprocessor:
         return X_preprocessed, X
     
 
+    def split_dataset(self, df: pd.DataFrame)->tuple[pd.DataFrame, pd.DataFrame]:
+        """
+            Split dataset into two sets: Train and test
+        """
+        df = df.sample(n=len(df))
+        train_set_size = int(Constant.TRAIN_SET_RATIO * len(df))
+        df_train = df.iloc[:train_set_size]
+        df_test = df.iloc[train_set_size:]
+        return df_train, df_test
+
 
 if __name__ == "__main__":
     
@@ -108,4 +119,3 @@ if __name__ == "__main__":
     print("X ", X.head())
     
     X.to_csv("data/logs_preprocessed")
-        
